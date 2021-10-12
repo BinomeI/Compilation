@@ -1,0 +1,9 @@
+
+begin
+    --Hello world
+    var:=5; 
+    read(TEST); 
+
+    var3:=6; 
+    write(var3); 
+end
