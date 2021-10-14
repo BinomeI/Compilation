@@ -13,6 +13,7 @@ typedef enum tokens_types {
     WRITE,
     ID,
     INTLATTERAL,
+    FLOAT,
     LPAREN,
     RPAREN,
     SEMICOLON,
@@ -26,6 +27,8 @@ typedef enum tokens_types {
 typedef enum errors_types {
     ASSIGNOP_ERROR, 
     UNKOWN_CHARACTER, 
+    REEL_ERROR, 
+    NO_ERROR
 }Errors; 
 
 
@@ -36,6 +39,7 @@ char mots_cle[][MAX] = {
     "WRITE",
     "ID",
     "INTLATTERAL",
+    "FLOAT",
     "LPAREN",
     "RPAREN",
     "SEMICOLON",
@@ -57,8 +61,14 @@ void Lexical_error(char car, Errors err) {
             printf("\nLexical Error: - Ligne %d - Le caractere '%c' est mal reconnue \n", LineNumbers, car); 
             break;  
         
+        case REEL_ERROR: 
+            printf("\nLexical Error: - Ligne %d - Le  Nombre reel est mal traite\n", LineNumbers); 
+            break; 
+        
     }
 }
+
+
 
 void clear_buffer()
 {
@@ -95,11 +105,61 @@ token check_reserved(){
     return ID; 
 }
 
+Errors TraitementAfterPoint(FILE *pt, int index) {
+    //index = 1 := calling the func after digits 
+    //index = 2 := calling the func when detecting a point as a scanner first character 
+
+    char c;
+    int checkedE=0;
+    int existCara = 0; 
+    char prev = '.';
+    for(c = fgetc(pt); isdigit(c) || c == '.' || c == 'e' || c == 'E'|| c == '-'; c = fgetc(pt))
+    {
+        switch (c)
+        {
+        case '.':
+            return REEL_ERROR; 
+            break;
+        case '-':
+            if (prev != 'e' && prev != 'E'){
+               
+                    ungetc(c, pt); 
+                    return NO_ERROR;
+                
+            }            
+            break;
+        case 'E':
+        case 'e':
+            if (!checkedE)
+            checkedE =1;
+            else return REEL_ERROR;
+            break;  
+   
+        }
+        prev = c; 
+    }
+    if(prev == '.' && index == 2){
+
+        ungetc(c, pt);
+        return UNKOWN_CHARACTER;  
+    }
+        
+    ungetc(c, pt); 
+    return NO_ERROR; 
+    
+}
 
 
 token scanner(FILE* pt)
 {
     char in_char, c;
+
+    int checkE = 0; 
+    int checkPoint = 0; 
+
+    token t; 
+
+
     clear_buffer();
     // rewind
     fseek( pt, 1, SEEK_CUR);
@@ -125,8 +185,20 @@ token scanner(FILE* pt)
 
         else if(isdigit(in_char))
         {
-            for(c = fgetc(pt); isdigit(c); c=fgetc(pt))
-                buffer_char(c); 
+ 
+            Errors err1; 
+            for(c = fgetc(pt); isdigit(c) || c == '.'; c=fgetc(pt)){
+                buffer_char(c);
+                if(c == '.') {
+                    err1 = TraitementAfterPoint(pt, 1);
+                    if(err1 != NO_ERROR) 
+                        Lexical_error(in_char, err1); 
+                    else  
+                        return FLOAT;      
+                }             
+            }
+            
+                 
             ungetc(c, pt); 
             
             return INTLATTERAL; 
@@ -146,6 +218,17 @@ token scanner(FILE* pt)
         
         else if(in_char == ',')
             return COMMA;
+
+        else if(in_char == '.')
+        {
+            Errors err = TraitementAfterPoint(pt, 2); 
+            if(err == NO_ERROR)
+                return FLOAT;
+
+            else 
+                Lexical_error(in_char, err);  
+        }
+             
 
         else if(in_char == ':')
         {
@@ -189,8 +272,6 @@ int main(int argc, char const *argv[])
     outF = fopen("OutFile.txt","w");
 
 
-    if(inF && outF)
-        printf("\nFiles are opened\n"); 
 
 
     token t;
@@ -199,10 +280,9 @@ int main(int argc, char const *argv[])
     while (feof(inF) == 0)
     {
         ungetc(c, inF); 
-        printf("\nEntred to file\n");
+        
 
         t = scanner(inF);
-        printf("%s",mots_cle[t]);
         fprintf(outF,"%s ",mots_cle[t]);
         if (t == SEMICOLON) fprintf(outF,"\n");
         if (t == BEGIN) fprintf(outF,"\n");
