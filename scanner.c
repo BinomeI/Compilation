@@ -105,6 +105,52 @@ token check_reserved(){
     return ID; 
 }
 
+Errors TraitementAfterE(FILE *pt) {
+    //index = 1 := calling the func after digits 
+    //index = 2 := calling the func when detecting a point as a scanner first character 
+
+    char c;
+    int existCara = 0; 
+    char prev = 'e';
+    for(c = fgetc(pt); isdigit(c) || c == '.' || c == 'e' || c == 'E'|| c == '-'|| c == '+'; c = fgetc(pt))
+    {
+        switch (c)
+        {
+        case '.':
+            return REEL_ERROR; 
+            break;
+        case '+':
+            if (prev != 'e' && prev != 'E')
+            {
+                    ungetc(c, pt); 
+                    return NO_ERROR;
+                
+            }            
+            break;
+        case '-':
+            if (prev != 'e' && prev != 'E')
+            {
+               
+                    ungetc(c, pt); 
+                    return NO_ERROR;
+                
+            }            
+            break;
+        case 'E':
+        case 'e':
+            return REEL_ERROR;
+            break;  
+   
+        }
+        prev = c; 
+    }
+        
+    ungetc(c, pt); 
+    return NO_ERROR; 
+    
+}
+
+
 Errors TraitementAfterPoint(FILE *pt, int index) {
     //index = 1 := calling the func after digits 
     //index = 2 := calling the func when detecting a point as a scanner first character 
@@ -113,15 +159,24 @@ Errors TraitementAfterPoint(FILE *pt, int index) {
     int checkedE=0;
     int existCara = 0; 
     char prev = '.';
-    for(c = fgetc(pt); isdigit(c) || c == '.' || c == 'e' || c == 'E'|| c == '-'; c = fgetc(pt))
+    for(c = fgetc(pt); isdigit(c) || c == '.' || c == 'e' || c == 'E'|| c == '-'|| c == '+'; c = fgetc(pt))
     {
         switch (c)
         {
         case '.':
             return REEL_ERROR; 
             break;
+        case '+':
+            if (prev != 'e' && prev != 'E')
+            {
+                    ungetc(c, pt); 
+                    return NO_ERROR;
+                
+            }            
+            break;
         case '-':
-            if (prev != 'e' && prev != 'E'){
+            if (prev != 'e' && prev != 'E')
+            {
                
                     ungetc(c, pt); 
                     return NO_ERROR;
@@ -187,7 +242,7 @@ token scanner(FILE* pt)
         {
  
             Errors err1; 
-            for(c = fgetc(pt); isdigit(c) || c == '.'; c=fgetc(pt)){
+            for(c = fgetc(pt); isdigit(c) || c == '.'|| c == 'e'|| c == 'E'; c=fgetc(pt)){
                 buffer_char(c);
                 if(c == '.') {
                     err1 = TraitementAfterPoint(pt, 1);
@@ -195,7 +250,15 @@ token scanner(FILE* pt)
                         Lexical_error(in_char, err1); 
                     else  
                         return FLOAT;      
-                }             
+                }      
+                else if(c == 'E' || c == 'e')
+                {
+                    err1 = TraitementAfterE(pt);
+                    if(err1 != NO_ERROR) 
+                        Lexical_error(in_char, err1); 
+                    else  
+                        return FLOAT;  
+                }       
             }
             
                  
