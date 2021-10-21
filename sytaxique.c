@@ -1,5 +1,6 @@
 #include "header.h"
 
+
 void inst(void)
 {
     token tok = next_token(); 
@@ -29,7 +30,7 @@ void inst_list(void)
 {
     // <inst_list> ::= <inst> {<inst>}
     inst(); 
-    while(true){
+    while(1){
         switch(next_token()) {
             case ID: 
             case READ: 
@@ -90,7 +91,7 @@ void expr_list(void)
 
 void add_opp(void)
 {
-    token t = next_token();
+    token tok = next_token();
     if(tok == PLUSOP || tok==MINUSOP)
         match(tok);
     else
@@ -110,8 +111,8 @@ void prim(void)
         case ID:
             match(ID);
         break;
-        case INTLITERAL:
-            match(INTLITERAL);
+        case INTLATTERAL:
+            match(INTLATTERAL);
         break;
         default:
             syntax_error(tok);
