@@ -31,7 +31,6 @@ typedef enum errors_types {
     NO_ERROR
 }Errors; 
 
-
 char mots_cle[][MAX] = {
     "BEGIN",
     "END",
@@ -50,7 +49,6 @@ char mots_cle[][MAX] = {
     "SCANEOF" 
 };
 
-
 void Lexical_error(char car, Errors err) {
     switch (err)
     {
@@ -68,8 +66,6 @@ void Lexical_error(char car, Errors err) {
     }
 }
 
-
-
 void clear_buffer()
 {
     for (int i = 0; i < MAX; i++)
@@ -85,8 +81,7 @@ void buffer_char(char car){
             token_buffer[i] = car;
             break; 
         }
-    }
-             
+    }             
 }
 
 token check_reserved(){
@@ -122,32 +117,27 @@ Errors TraitementAfterE(FILE *pt) {
         case '+':
             if (prev != 'e' && prev != 'E')
             {
-                    ungetc(c, pt); 
-                    return NO_ERROR;
-                
+                ungetc(c, pt); 
+                return NO_ERROR;
             }            
             break;
         case '-':
             if (prev != 'e' && prev != 'E')
             {
-               
-                    ungetc(c, pt); 
-                    return NO_ERROR;
-                
+                ungetc(c, pt); 
+                return NO_ERROR;
             }            
             break;
         case 'E':
         case 'e':
             return REEL_ERROR;
             break;  
-   
         }
         prev = c; 
     }
         
     ungetc(c, pt); 
     return NO_ERROR; 
-    
 }
 
 
@@ -169,18 +159,15 @@ Errors TraitementAfterPoint(FILE *pt, int index) {
         case '+':
             if (prev != 'e' && prev != 'E')
             {
-                    ungetc(c, pt); 
-                    return NO_ERROR;
-                
+                ungetc(c, pt); 
+                return NO_ERROR;
             }            
             break;
         case '-':
             if (prev != 'e' && prev != 'E')
             {
-               
-                    ungetc(c, pt); 
-                    return NO_ERROR;
-                
+                ungetc(c, pt); 
+                return NO_ERROR;
             }            
             break;
         case 'E':
@@ -189,7 +176,6 @@ Errors TraitementAfterPoint(FILE *pt, int index) {
             checkedE =1;
             else return REEL_ERROR;
             break;  
-   
         }
         prev = c; 
     }
@@ -201,7 +187,6 @@ Errors TraitementAfterPoint(FILE *pt, int index) {
         
     ungetc(c, pt); 
     return NO_ERROR; 
-    
 }
 
 
@@ -214,11 +199,12 @@ token scanner(FILE* pt)
 
     token t; 
 
-
     clear_buffer();
     // rewind
     fseek( pt, 1, SEEK_CUR);
-    if(feof(pt)) return SCANEOF;
+    if(feof(pt)) 
+        return SCANEOF;
+
     while ((in_char = fgetc(pt)) != EOF)
     {
         if (isspace(in_char)) {
@@ -233,8 +219,7 @@ token scanner(FILE* pt)
             for(c = fgetc(pt); isalnum(c) || c == '_'; c = fgetc(pt))
                 buffer_char(c); 
             
-            ungetc(c, pt); 
-            
+            ungetc(c, pt);     
             return check_reserved(); 
         }
 
@@ -263,7 +248,6 @@ token scanner(FILE* pt)
             
                  
             ungetc(c, pt); 
-            
             return INTLATTERAL; 
         }
         else if(in_char == '(')
@@ -274,8 +258,7 @@ token scanner(FILE* pt)
         
         else if(in_char == ';')
             return SEMICOLON; 
-        
-
+    
         else if(in_char == '+')
             return PLUSOP; 
         
@@ -292,7 +275,6 @@ token scanner(FILE* pt)
                 Lexical_error(in_char, err);  
         }
              
-
         else if(in_char == ':')
         {
             if((c = fgetc(pt)) == '=')
@@ -300,8 +282,6 @@ token scanner(FILE* pt)
             
             Lexical_error(c, ASSIGNOP_ERROR);             
             ungetc(c, pt);
-             
-
         }
 
         else if(in_char == '-')
@@ -324,7 +304,6 @@ token scanner(FILE* pt)
             
         }
     }
-    
 }
 
 int main(int argc, char const *argv[])
@@ -334,9 +313,6 @@ int main(int argc, char const *argv[])
     inF = fopen("InFile.txt","r+");
     outF = fopen("OutFile.txt","w");
 
-
-
-
     token t;
     char c; 
 
@@ -344,14 +320,13 @@ int main(int argc, char const *argv[])
     {
         ungetc(c, inF); 
         
-
         t = scanner(inF);
+
         fprintf(outF,"%s ",mots_cle[t]);
         if (t == SEMICOLON) fprintf(outF,"\n");
         if (t == BEGIN) fprintf(outF,"\n");
         if (t == END) fprintf(outF,"\n");
     }
-
 
     fclose(inF);
     fclose(outF);
