@@ -54,3 +54,66 @@ void system_goal(void){
     match(SCANEOF); 
 
 }
+
+void id_list (void)
+{
+    match(ID);
+    while(next_token() == COMMA)
+    {
+        match(COMMA);
+        match(ID);
+    }
+}
+
+void expression(void)
+{
+    token t;
+    prim();
+    for(t=next_token(); t==PLUSOP || t==MINUSOP; 
+        t=next_token())
+        {
+            add_opp();
+            prim();
+        }
+}
+
+void expr_list(void)
+{
+    expression();
+    while(next_token()==COMMA)
+    {
+        add_opp();
+        prim();
+    }
+}
+
+void add_opp(void)
+{
+    token t = next_token();
+    if(tok == PLUSOP || tok==MINUSOP)
+        match(tok);
+    else
+        syntax_error(tok); 
+}
+
+
+void prim(void)
+{
+    token tok = next_token();
+    switch(tok)
+    {
+        case LPAREN:
+            match(LPAREN); expression();
+            match(RPAREN);
+        break;
+        case ID:
+            match(ID);
+        break;
+        case INTLITERAL:
+            match(INTLITERAL);
+        break;
+        default:
+            syntax_error(tok);
+            break;
+    }
+}
