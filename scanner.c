@@ -2,52 +2,11 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#include "header.h"
 
-#define MAX 26
 int LineNumbers = 1; 
 char token_buffer[MAX];
-typedef enum tokens_types {
-    BEGIN,
-    END,
-    READ,
-    WRITE,
-    ID,
-    INTLATTERAL,
-    FLOAT,
-    LPAREN,
-    RPAREN,
-    SEMICOLON,
-    COMMA,
-    ASSIGNOP,
-    PLUSOP,
-    MINUSOP,
-    SCANEOF
-} token;
 
-typedef enum errors_types {
-    ASSIGNOP_ERROR, 
-    UNKOWN_CHARACTER, 
-    REEL_ERROR, 
-    NO_ERROR
-}Errors; 
-
-char mots_cle[][MAX] = {
-    "BEGIN",
-    "END",
-    "READ",
-    "WRITE",
-    "ID",
-    "INTLATTERAL",
-    "FLOAT",
-    "LPAREN",
-    "RPAREN",
-    "SEMICOLON",
-    "COMMA",
-    "ASSIGNOP",
-    "PLUSOP",
-    "MINUSOP",
-    "SCANEOF" 
-};
 
 void Lexical_error(char car, Errors err) {
     switch (err)
