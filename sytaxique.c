@@ -29,7 +29,8 @@ void clear_current()
 
 void match(token t)
 {
-
+    if(strcmp(mots_cle[t],current_token))
+        syntax_error(t);
 }
 
 void inst(void)
