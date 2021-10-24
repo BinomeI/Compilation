@@ -3,6 +3,16 @@
 #include <ctype.h>
 #include <string.h>
 #include "header.h"
+#include "sytaxique.c"
+
+void testFileDeclaredGlobally(){
+    char c; 
+    while ((c = fgetc(fil)) != EOF)
+    {
+        printf("%c",c);
+    }
+    
+}
 
 // comment
 
@@ -157,8 +167,7 @@ token scanner(FILE* pt)
     token t; 
 
     clear_buffer();
-    // rewind
-    fseek( pt, 1, SEEK_CUR);
+   
     if(feof(pt)) 
         return SCANEOF;
 
@@ -273,20 +282,27 @@ int main(int argc, char const *argv[])
     token t;
     char c; 
 
-    while (feof(inF) == 0)
+    while (1)
     {
-        ungetc(c, inF); 
-        
         t = scanner(inF);
 
         fprintf(outF,"%s ",mots_cle[t]);
         if (t == SEMICOLON) fprintf(outF,"\n");
         if (t == BEGIN) fprintf(outF,"\n");
         if (t == END) fprintf(outF,"\n");
+        if(t == SCANEOF) break;
+        
     }
 
     fclose(inF);
     fclose(outF);
     
+    FILE *fptrOut = fopen("OutFile.txt", "r"); 
+    if(fptrOut){
+        fil = fptrOut; 
+        token tok = next_token(); 
+        printf("\n%s\n", current_token);
+        
+    }
     return 0;
 }

@@ -7,16 +7,6 @@ void syntax_error(token tok){
     printf("\nKey Word: %s expected instead of: %s\n", mots_cle[tok], current_token); 
 }
 
-token next_token(FILE *fptr) {
-    clear_current(); 
-    fscanf(fptr, "%s", current_token); 
-    for (int i = 0; i < MAX; i++)
-        if(strcmp(current_token, mots_cle[i]) == 0)
-            return i;    
-    
-    printf("\nWeirred error occured\n");
-    
-}
 
 void clear_current()
 {
@@ -25,6 +15,18 @@ void clear_current()
         current_token[i] = '\0';
     } 
 }
+
+token next_token() {
+    clear_current(); 
+    fscanf(fil, "%s", current_token); 
+    for (int i = 0; i < MAX; i++)
+        if(strcmp(current_token, mots_cle[i]) == 0)
+            return i;    
+    
+    printf("\nWeirred error occured\n");
+    
+}
+
 
 
 void match(token t)
@@ -149,3 +151,4 @@ void prim(void)
             break;
     }
 }
+
