@@ -41,9 +41,43 @@ void clear_current()
 token next_token() {
     char c;
     char localBuffer[MAX];
-    clear_current(); 
+    for (int i = 0; i < MAX; i++)
+    {
+        localBuffer[i] ='\0';
+    }
+    
     // fscanf(fil, "%s", current_token); 
     int lecIndex = 0;
+    while (1)
+    {
+        c = fgetc(fil);
+        if(isspace(c))break;
+        localBuffer[lecIndex]=c;
+        lecIndex++;
+    }
+
+    ungetc(c,fil);
+    for (int i = --lecIndex; i >= 0; i--)
+    {
+        ungetc(localBuffer[i],fil);
+    }
+    
+
+    printf("'%s'", localBuffer);
+    for (int i = 0; i < MAX; i++)
+        if(strcmp(localBuffer, mots_cle[i]) == 0)
+            return i;    
+    
+    printf("\nWeirred error occured\n");
+    
+}
+
+
+void match(token t)
+{
+    clear_current();
+    int lecIndex=0;
+    char c;
     while (1)
     {
         c = fgetc(fil);
@@ -56,22 +90,10 @@ token next_token() {
         current_token[lecIndex]=c;
         lecIndex++;
     }
-        
-
-    printf("'%s'", current_token);
-    for (int i = 0; i < MAX; i++)
-        if(strcmp(current_token, mots_cle[i]) == 0)
-            return i;    
-    
-    printf("\nWeirred error occured\n");
-    
-}
-
-
-void match(token t)
-{
+    printf("\n%s\n",current_token);
     if(strcmp(mots_cle[t],current_token) != 0)
         syntax_error(t, 0);
+    
 }
 
 void inst(void)
@@ -80,28 +102,23 @@ void inst(void)
     switch(tok) {
         case ID: 
             match(ID);
-            tok = next_token();
             match(ASSIGNOP); 
             expression(); match(SEMICOLON); 
             break; 
         
         case READ: 
-            match(READ); 
-            tok = next_token();
+            match(READ);
             match(LPAREN); 
             id_list(); 
-            match(RPAREN); 
-            tok = next_token();
+            match(RPAREN);
             match(SEMICOLON); 
             break; 
         
         case WRITE: 
             match(WRITE); 
-            tok = next_token();
             match(LPAREN); 
             expr_list(); 
-            match(RPAREN); 
-            tok = next_token();
+            match(RPAREN);
             match(SEMICOLON); 
             break; 
         

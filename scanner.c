@@ -50,6 +50,16 @@ void buffer_char(char car){
         }
     }             
 }
+char* strupr ( char *p )
+{
+    char *h = p;
+while( *p)
+{
+*p=toupper( *p );
+p++;
+}
+return h;
+}
 
 token check_reserved(){
     if(strcmp(strupr(token_buffer), strupr(mots_cle[BEGIN])) == 0)
@@ -300,9 +310,7 @@ int main(int argc, char const *argv[])
     LineNumbers = 0;
     FILE *fptrOut = fopen("OutFile.txt", "r"); 
     if(fptrOut){
-        fil = fptrOut; 
-        token tok = next_token(); 
-        printf("\n%s\n", current_token);
+        fil = fptrOut;
         system_goal();
         
     }

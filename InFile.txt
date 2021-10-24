@@ -1,4 +1,4 @@
-begin
-   write(8);
+BEGIN
+   WRITE(8);
    var:=5;
-end
+END
