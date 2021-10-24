@@ -1,6 +1,6 @@
 #include "header.h"
 
-//chane
+//changest
 void inst(void)
 {
     token tok = next_token(); 
