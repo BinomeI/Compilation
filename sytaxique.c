@@ -40,6 +40,7 @@ void clear_current()
 
 token next_token() {
     char c;
+    char localBuffer[MAX];
     clear_current(); 
     // fscanf(fil, "%s", current_token); 
     int lecIndex = 0;

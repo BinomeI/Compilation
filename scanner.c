@@ -286,11 +286,12 @@ int main(int argc, char const *argv[])
     {
         t = scanner(inF);
 
-        fprintf(outF,"%s ",mots_cle[t]);
+        fprintf(outF,"%s",mots_cle[t]);
         if (t == SEMICOLON) fprintf(outF,"\n");
-        if (t == BEGIN) fprintf(outF,"\n");
-        if (t == END) fprintf(outF,"\n");
-        if(t == SCANEOF) break;
+        else if (t == BEGIN) fprintf(outF,"\n");
+        else if (t == END) fprintf(outF,"\n");
+        else if(t == SCANEOF) break;
+        else fprintf(outF," ");
         
     }
 
