@@ -1,8 +1,22 @@
 #include "header.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
+void syntax_error(token tok){
+    printf("\nKey Word: %s expected instead of: %s\n", mots_cle[tok], current_token); 
+}
 
+token next_token(FILE *fptr) {
+    clear_current(); 
+    fscanf(fptr, "%s", current_token); 
+    for (int i = 0; i < MAX; i++)
+        if(strcmp(current_token, mots_cle[i]) == 0)
+            return i;    
+    
+    printf("\nWeirred error occured\n");
+    
+}
 
 void clear_current()
 {
@@ -11,7 +25,6 @@ void clear_current()
         current_token[i] = '\0';
     } 
 }
-
 
 
 void match(token t)
@@ -39,7 +52,7 @@ void inst(void)
             break; 
         
         default: 
-            syntax_error(); 
+            syntax_error(tok); 
             break; 
     }
 }
