@@ -42,3 +42,8 @@ char mots_cle[][MAX] = {
     "MINUSOP",
     "SCANEOF" 
 };
+
+int LineNumbers = 1; 
+char token_buffer[MAX];
+
+char current_token[MAX];

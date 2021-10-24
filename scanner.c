@@ -4,8 +4,6 @@
 #include <string.h>
 #include "header.h"
 
-int LineNumbers = 1; 
-char token_buffer[MAX];
 
 
 void Lexical_error(char car, Errors err) {

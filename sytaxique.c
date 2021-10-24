@@ -1,5 +1,17 @@
 #include "header.h"
+#include <stdlib.h>
+#include <stdio.h>
 
+
+
+
+
+
+
+void match(token t)
+{
+
+}
 
 void inst(void)
 {
@@ -42,8 +54,6 @@ void inst_list(void)
         }
     }
 }
-
-
 
 void program(){
     match(BEGIN); 
