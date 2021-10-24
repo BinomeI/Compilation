@@ -4,7 +4,13 @@
 
 
 
-
+void clear_current()
+{
+    for (int i = 0; i < MAX; i++)
+    {
+        current_token[i] = '\0';
+    } 
+}
 
 
 
