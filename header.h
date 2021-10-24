@@ -48,6 +48,6 @@ int LineNumbers = 1;
 char token_buffer[MAX];
 
 char current_token[MAX];
-
+char expected_token[MAX];
 FILE* fil;
 

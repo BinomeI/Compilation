@@ -2,8 +2,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 
-void syntax_error(token tok);
+void syntax_error(token tok, int index);
 void clear_current();
 token next_token();
 void match(token t);
@@ -17,8 +18,15 @@ void expr_list(void);
 void add_opp(void);
 void prim(void);
 
-void syntax_error(token tok){
-    printf("\nKey Word: %s expected instead of: %s\n", mots_cle[tok], current_token); 
+void syntax_error(token tok, int index){
+    // index = 0: interieur de match
+    // index = 1: interieur de default
+    if(index == 1){
+        printf("\ninto default\n");
+    }
+    else
+        printf("\ninto match\n");
+    printf("\n Error at line: %d ==> Key Word: '%s' expected instead of: '%s'\n", LineNumbers, mots_cle[tok], current_token); 
 }
 
 
@@ -31,8 +39,25 @@ void clear_current()
 }
 
 token next_token() {
+    char c;
     clear_current(); 
-    fscanf(fil, "%s", current_token); 
+    // fscanf(fil, "%s", current_token); 
+    int lecIndex = 0;
+    while (1)
+    {
+        c = fgetc(fil);
+        if(c=='\n')
+        {
+            LineNumbers++;
+            break;
+        }
+        if(isspace(c))break;
+        current_token[lecIndex]=c;
+        lecIndex++;
+    }
+        
+
+    printf("'%s'", current_token);
     for (int i = 0; i < MAX; i++)
         if(strcmp(current_token, mots_cle[i]) == 0)
             return i;    
@@ -44,8 +69,8 @@ token next_token() {
 
 void match(token t)
 {
-    if(strcmp(mots_cle[t],current_token))
-        syntax_error(t);
+    if(strcmp(mots_cle[t],current_token) != 0)
+        syntax_error(t, 0);
 }
 
 void inst(void)
@@ -53,22 +78,34 @@ void inst(void)
     token tok = next_token(); 
     switch(tok) {
         case ID: 
-            match(ID); match(ASSIGNOP); 
+            match(ID);
+            tok = next_token();
+            match(ASSIGNOP); 
             expression(); match(SEMICOLON); 
             break; 
         
         case READ: 
-            match(READ); match(LPAREN); 
-            id_list(); match(RPAREN); match(SEMICOLON); 
+            match(READ); 
+            tok = next_token();
+            match(LPAREN); 
+            id_list(); 
+            match(RPAREN); 
+            tok = next_token();
+            match(SEMICOLON); 
             break; 
         
         case WRITE: 
-            match(WRITE); match(LPAREN); 
-            expr_list(); match(RPAREN); match(SEMICOLON); 
+            match(WRITE); 
+            tok = next_token();
+            match(LPAREN); 
+            expr_list(); 
+            match(RPAREN); 
+            tok = next_token();
+            match(SEMICOLON); 
             break; 
         
         default: 
-            syntax_error(tok); 
+            syntax_error(tok, 1); 
             break; 
     }
 }
@@ -104,10 +141,12 @@ void system_goal(void){
 
 void id_list (void)
 {
+    token tok;
     match(ID);
     while(next_token() == COMMA)
     {
         match(COMMA);
+        tok = next_token();
         match(ID);
     }
 }
@@ -140,7 +179,7 @@ void add_opp(void)
     if(tok == PLUSOP || tok==MINUSOP)
         match(tok);
     else
-        syntax_error(tok); 
+        syntax_error(tok, 1); 
 }
 
 
@@ -160,7 +199,7 @@ void prim(void)
             match(INTLATTERAL);
         break;
         default:
-            syntax_error(tok);
+            syntax_error(tok, 1);
             break;
     }
 }

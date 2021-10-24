@@ -1,12 +1,3 @@
 begin
-   --Hello world
-    var:=5.123;
-    var:=5.;
-    var:=5.123e--;
-    var:=.123(1.e-2-5.4); 
-    read(TEST); 
-    #
-    write(2E-3);
-    var3:=6; 
-    write(var3); 
+   write(8-var);
 end

@@ -296,12 +296,13 @@ int main(int argc, char const *argv[])
 
     fclose(inF);
     fclose(outF);
-    
+    LineNumbers = 0;
     FILE *fptrOut = fopen("OutFile.txt", "r"); 
     if(fptrOut){
         fil = fptrOut; 
         token tok = next_token(); 
         printf("\n%s\n", current_token);
+        system_goal();
         
     }
     return 0;
