@@ -1,4 +1,5 @@
 #pragma once
+#include <stdio.h>
 #define MAX 26
 typedef enum tokens_types {
     BEGIN,

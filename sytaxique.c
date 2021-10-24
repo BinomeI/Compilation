@@ -3,6 +3,20 @@
 #include <stdio.h>
 #include <string.h>
 
+void syntax_error(token tok);
+void clear_current();
+token next_token();
+void match(token t);
+void inst(void);
+void inst_list(void);
+void program();
+void system_goal(void);
+void id_list (void);
+void expression(void);
+void expr_list(void);
+void add_opp(void);
+void prim(void);
+
 void syntax_error(token tok){
     printf("\nKey Word: %s expected instead of: %s\n", mots_cle[tok], current_token); 
 }
@@ -26,7 +40,6 @@ token next_token() {
     printf("\nWeirred error occured\n");
     
 }
-
 
 
 void match(token t)
