@@ -27,6 +27,7 @@ void syntax_error(token tok, int index){
     // else
     //     printf("\ninto match\n");
     printf("\n Error at line: %d ==> Key Word: '%s' expected instead of: '%s'\n", LineNumbers, mots_cle[tok], current_token); 
+    exit(0);
 }
 
 

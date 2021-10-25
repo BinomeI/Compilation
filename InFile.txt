@@ -1,5 +1,5 @@
 BEGIN
    WRITE(8);
    var:=5;
-   write(9);
+   write 9);
 END
