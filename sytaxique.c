@@ -21,11 +21,11 @@ void prim(void);
 void syntax_error(token tok, int index){
     // index = 0: interieur de match
     // index = 1: interieur de default
-    if(index == 1){
-        printf("\ninto default\n");
-    }
-    else
-        printf("\ninto match\n");
+    // if(index == 1){
+    //     printf("\ninto default\n");
+    // }
+    // else
+    //     printf("\ninto match\n");
     printf("\n Error at line: %d ==> Key Word: '%s' expected instead of: '%s'\n", LineNumbers, mots_cle[tok], current_token); 
 }
 
@@ -61,9 +61,6 @@ token next_token() {
     {
         ungetc(localBuffer[i],fil);
     }
-    
-
-    printf("'%s'", localBuffer);
     for (int i = 0; i < MAX; i++)
         if(strcmp(localBuffer, mots_cle[i]) == 0)
             return i;    
@@ -90,7 +87,6 @@ void match(token t)
         current_token[lecIndex]=c;
         lecIndex++;
     }
-    printf("\n%s\n",current_token);
     if(strcmp(mots_cle[t],current_token) != 0)
         syntax_error(t, 0);
     

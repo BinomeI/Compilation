@@ -307,10 +307,11 @@ int main(int argc, char const *argv[])
 
     fclose(inF);
     fclose(outF);
-    LineNumbers = 0;
+    LineNumbers = 1;
     FILE *fptrOut = fopen("OutFile.txt", "r"); 
     if(fptrOut){
         fil = fptrOut;
+        printf("\n------\n");
         system_goal();
         
     }
