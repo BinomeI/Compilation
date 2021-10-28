@@ -20,10 +20,10 @@ typedef enum tokens_types {
 } token;
 
 typedef enum errors_types {
+    NO_ERROR,
     ASSIGNOP_ERROR, 
     UNKOWN_CHARACTER, 
-    REEL_ERROR, 
-    NO_ERROR
+    REEL_ERROR
 }Errors; 
 
 char mots_cle[][MAX] = {
@@ -43,6 +43,9 @@ char mots_cle[][MAX] = {
     "MINUSOP",
     "SCANEOF" 
 };
+
+Errors LexicaleError = NO_ERROR; 
+
 
 int LineNumbers = 1; 
 char token_buffer[MAX];

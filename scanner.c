@@ -17,6 +17,7 @@ void testFileDeclaredGlobally(){
 // comment
 
 void Lexical_error(char car, Errors err) {
+    LexicaleError = err;
     switch (err)
     {
         case ASSIGNOP_ERROR:
@@ -29,7 +30,6 @@ void Lexical_error(char car, Errors err) {
         case REEL_ERROR: 
             printf("\nLexical Error: - Ligne %d - Le  Nombre reel est mal traite\n", LineNumbers); 
             break; 
-        
     }
 }
 
@@ -285,12 +285,24 @@ token scanner(FILE* pt)
 int main(int argc, char const *argv[])
 {
 
+    int choice = 0; 
+    etiq:
+
+    printf("\nVeuillez choissir l'analyseur qui vous convient\n");
+    printf("\n1- Analyseur Lexicale\n");
+    printf("\n2- Analyseur Syntaxique\n");
+    printf("\nVotre choix: ");
+
+    scanf("%d", &choice);
+
+    if(choice != 1 && choice != 2)
+        goto etiq; 
+    
     FILE *inF, *outF;
+    token t;
+
     inF = fopen("InFile.txt","r+");
     outF = fopen("OutFile.txt","w");
-
-    token t;
-    char c; 
 
     while (1)
     {
@@ -304,16 +316,53 @@ int main(int argc, char const *argv[])
         else fprintf(outF," ");
         
     }
-
     fclose(inF);
     fclose(outF);
+
     LineNumbers = 1;
-    FILE *fptrOut = fopen("OutFile.txt", "r"); 
-    if(fptrOut){
-        fil = fptrOut;
-        printf("\n------\n");
-        system_goal();
-        
+
+    FILE *fptrOut;
+
+    switch (choice)
+    {
+    case 1:
+        break;
+    
+    case 2:
+        if(!LexicaleError){
+            fptrOut = fopen("OutFile.txt", "r"); 
+            if(fptrOut){
+                fil = fptrOut;
+                printf("\n------\n");
+                system_goal();
+            }
+
+            fclose(fptrOut); 
+        } 
+        break; 
+    default:
+         
+        break;
     }
+    char choice2; 
+    printf("\nVoulez-vous refaire le test ? [Y/N]:");
+    
+    scanf(" %c", &choice2);
+
+    switch (choice2)
+    {
+    case 'y':
+    case 'Y':
+        goto etiq; 
+        break;
+        
+    case 'N': 
+    case 'n':
+        break;
+    default:
+        printf("\nThe choice is not clear so we'll quit for now\n");
+        break;
+    }
+
     return 0;
 }

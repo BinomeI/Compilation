@@ -76,6 +76,8 @@ void match(token t)
     clear_current();
     int lecIndex=0;
     char c;
+    if(t == SCANEOF)
+        printf("\nWe are at the end of file \n No Error detected !"); 
     while (1)
     {
         c = fgetc(fil);
@@ -84,7 +86,7 @@ void match(token t)
             LineNumbers++;
             break;
         }
-        if(isspace(c))break;
+        if(isspace(c) || c == EOF)break;
         current_token[lecIndex]=c;
         lecIndex++;
     }
@@ -212,6 +214,9 @@ void prim(void)
         break;
         case INTLATTERAL:
             match(INTLATTERAL);
+        break;
+        case FLOAT:
+            match(FLOAT);
         break;
         default:
             syntax_error(tok, 1);
