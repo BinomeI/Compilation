@@ -27,7 +27,8 @@ typedef enum errors_types {
     INST_ERROR, 
     ADDOPERROR, 
     MATCH_ERROR, 
-    REEL_ERROR
+    REEL_ERROR, 
+    FATAL_ERROR
 }Errors; 
 
 char mots_cle[][MAX] = {
@@ -58,4 +59,6 @@ char current_token[MAX];
 char expected_token[MAX];
 char RESERVE = '1'; 
 FILE* fil;
+
+unsigned short int BeginCounter = 0; 
 

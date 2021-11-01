@@ -23,6 +23,10 @@ void syntax_error(token tok, Errors err){
     RESERVE = '\0'; 
     switch (err)
     {
+    case FATAL_ERROR:
+        printf("\nError at line %d: Can't have separated Blocks of instructions in one program\n", LineNumbers); 
+        exit(0);
+        break;        
     case PRIM_ERROR:
         printf("\nError at line %d: a PRIMITIVE expected instead of '%s'\n", LineNumbers, mots_cle[tok]); 
         break;
@@ -51,12 +55,10 @@ void syntax_error(token tok, Errors err){
  
 }
 
-
 void clear_current()
 {
     for (int i = 0; i < MAX; i++)
         current_token[i] = '\0';
-    
 }
 
 token next_token() {
@@ -80,12 +82,16 @@ token next_token() {
 
     int i;
     for (i = 0; i < MAX; i++)
-        if(strcmp(localBuffer, mots_cle[i]) == 0)
-            return i;    
+        if(strcmp(localBuffer, mots_cle[i]) == 0) {
+            if(strcmp(localBuffer, "BEGIN") == 0){
+                syntax_error(BEGIN, FATAL_ERROR);
+            }
+            return i;
+        }
+                
     
     printf("\nWeirred error occured\n");
 }
-
 
 void match(token t)
 {
@@ -111,8 +117,6 @@ void match(token t)
 
     if(strcmp(mots_cle[t],current_token) != 0)
         syntax_error(t, MATCH_ERROR);
-    
-    
 }
 
 void inst(void)
@@ -172,7 +176,6 @@ void program(){
 void system_goal(void){
     program(); 
     match(SCANEOF); 
-
 }
 
 void id_list (void)
@@ -191,12 +194,11 @@ void expression(void)
 {
     token t;
     prim();
-    for(t=next_token(); t==PLUSOP || t==MINUSOP; 
-        t=next_token())
-        {
-            add_opp();
-            prim();
-        }
+    for(t=next_token(); t==PLUSOP || t==MINUSOP; t=next_token())
+    {
+        add_opp();
+        prim();
+    }
 }
 
 void expr_list(void)
