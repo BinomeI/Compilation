@@ -4,7 +4,7 @@
 #include <string.h>
 #include <ctype.h>
 
-void syntax_error(token tok, int index);
+void syntax_error(token tok, Errors err);
 void clear_current();
 token next_token();
 void match(token t);
@@ -18,16 +18,44 @@ void expr_list(void);
 void add_opp(void);
 void prim(void);
 
-void syntax_error(token tok, int index){
-    // index = 0: interieur de match
-    // index = 1: interieur de default
-    // if(index == 1){
-    //     printf("\ninto default\n");
+void syntax_error(token tok, Errors err){
+    switch (err)
+    {
+    case PRIM_ERROR:
+        printf("\nError at line %d: a PRIMITIVE expected instead of '%s'\n", LineNumbers, current_token); 
+        break;
+
+    case INST_ERROR:
+        printf("\nError at line %d: an INSTRUCTION expected instead of '%s'\n", LineNumbers, current_token); 
+        break;
+
+    case ADDOPERROR:
+        printf("\nError at Line %d: Expected Plus or Minus Operators instead of '%s'\n", LineNumbers, current_token); 
+        break;
+
+    case MATCH_ERROR:
+        printf("\nError at line: %d ==>Key Word: Key Expexted '%s' instead of '%s'\n", LineNumbers, mots_cle[tok], current_token); 
+        break;
+
+    default:
+        break;
+    }
+
+    int lecIndex = strlen(current_token); 
+    //char localBuffer[MAX];
+    // for (int i = 0; i < MAX; i++)
+    // {
+    //     localBuffer[i] ='\0';
     // }
-    // else
-    //     printf("\ninto match\n");
-    printf("\n Error at line: %d ==> Key Word: '%s' expected instead of: '%s'\n", LineNumbers, mots_cle[tok], current_token); 
-    exit(0);
+    // ungetc(c,fil);
+    // strcpy(localBuffer,current_token);
+    // if(index == 0)
+    
+    for (int i = --lecIndex; i >= 0; i--)
+    {
+        ungetc(current_token[i],fil);
+    }
+ 
 }
 
 
@@ -62,7 +90,8 @@ token next_token() {
     {
         ungetc(localBuffer[i],fil);
     }
-    for (int i = 0; i < MAX; i++)
+    int i;
+    for (i = 0; i < MAX; i++)
         if(strcmp(localBuffer, mots_cle[i]) == 0)
             return i;    
     
@@ -76,23 +105,27 @@ void match(token t)
     clear_current();
     int lecIndex=0;
     char c;
-    if(t == SCANEOF)
-        printf("\nWe are at the end of file \n No Error detected !"); 
     while (1)
     {
         c = fgetc(fil);
         if(c=='\n')
         {
+            RESERVE = c; 
             LineNumbers++;
             break;
         }
-        if(isspace(c) || c == EOF)break;
+        if(isspace(c) || c == EOF){
+            RESERVE = c; 
+            break;
+        }
         current_token[lecIndex]=c;
         lecIndex++;
     }
-    if(strcmp(mots_cle[t],current_token) != 0)
-        syntax_error(t, 0);
     
+    if(strcmp(mots_cle[t],current_token) != 0){
+        ungetc(c, fil);
+        syntax_error(t, MATCH_ERROR);
+    } 
 }
 
 void inst(void)
@@ -122,7 +155,7 @@ void inst(void)
             break; 
         
         default: 
-            syntax_error(tok, 1); 
+            syntax_error(tok, INST_ERROR); 
             break; 
     }
 }
@@ -196,7 +229,7 @@ void add_opp(void)
     if(tok == PLUSOP || tok==MINUSOP)
         match(tok);
     else
-        syntax_error(tok, 1); 
+        syntax_error(tok, ADDOPERROR); 
 }
 
 
@@ -219,7 +252,7 @@ void prim(void)
             match(FLOAT);
         break;
         default:
-            syntax_error(tok, 1);
+            syntax_error(tok, PRIM_ERROR);
             break;
     }
 }

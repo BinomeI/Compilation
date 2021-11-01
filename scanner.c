@@ -285,7 +285,7 @@ token scanner(FILE* pt)
 int main(int argc, char const *argv[])
 {
 
-    int choice = 0; 
+    int choice = 2; 
     etiq:
 
     printf("\nVeuillez choissir l'analyseur qui vous convient\n");
@@ -293,7 +293,7 @@ int main(int argc, char const *argv[])
     printf("\n2- Analyseur Syntaxique\n");
     printf("\nVotre choix: ");
 
-    scanf("%d", &choice);
+    // scanf("%d", &choice);
 
     if(choice != 1 && choice != 2)
         goto etiq; 
@@ -329,16 +329,16 @@ int main(int argc, char const *argv[])
         break;
     
     case 2:
-        if(!LexicaleError){
-            fptrOut = fopen("OutFile.txt", "r"); 
-            if(fptrOut){
-                fil = fptrOut;
-                printf("\n------\n");
-                system_goal();
-            }
 
-            fclose(fptrOut); 
-        } 
+        fptrOut = fopen("OutFile.txt", "r"); 
+        if(fptrOut){
+            fil = fptrOut;
+            printf("\n------\n");
+            system_goal();
+        }
+
+        fclose(fptrOut); 
+
         break; 
     default:
          

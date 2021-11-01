@@ -23,6 +23,10 @@ typedef enum errors_types {
     NO_ERROR,
     ASSIGNOP_ERROR, 
     UNKOWN_CHARACTER, 
+    PRIM_ERROR, 
+    INST_ERROR, 
+    ADDOPERROR, 
+    MATCH_ERROR, 
     REEL_ERROR
 }Errors; 
 
@@ -52,5 +56,6 @@ char token_buffer[MAX];
 
 char current_token[MAX];
 char expected_token[MAX];
+char RESERVE = '1'; 
 FILE* fil;
 

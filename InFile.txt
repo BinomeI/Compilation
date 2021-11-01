@@ -1,5 +1,3 @@
-begin
-   WRITE (8.56);
-   var :=5;
-   write (9);
+write ();
 END
+end
