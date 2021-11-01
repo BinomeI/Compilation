@@ -19,18 +19,20 @@ void add_opp(void);
 void prim(void);
 
 void syntax_error(token tok, Errors err){
+    ungetc(RESERVE, fil); 
+    RESERVE = '\0'; 
     switch (err)
     {
     case PRIM_ERROR:
-        printf("\nError at line %d: a PRIMITIVE expected instead of '%s'\n", LineNumbers, current_token); 
+        printf("\nError at line %d: a PRIMITIVE expected instead of '%s'\n", LineNumbers, mots_cle[tok]); 
         break;
 
     case INST_ERROR:
-        printf("\nError at line %d: an INSTRUCTION expected instead of '%s'\n", LineNumbers, current_token); 
+        printf("\nError at line %d: an INSTRUCTION expected instead of '%s'\n", LineNumbers, mots_cle[tok]); 
         break;
 
     case ADDOPERROR:
-        printf("\nError at Line %d: Expected Plus or Minus Operators instead of '%s'\n", LineNumbers, current_token); 
+        printf("\nError at Line %d: Expected Plus or Minus Operators instead of '%s'\n", LineNumbers, mots_cle[tok]); 
         break;
 
     case MATCH_ERROR:
@@ -42,19 +44,10 @@ void syntax_error(token tok, Errors err){
     }
 
     int lecIndex = strlen(current_token); 
-    //char localBuffer[MAX];
-    // for (int i = 0; i < MAX; i++)
-    // {
-    //     localBuffer[i] ='\0';
-    // }
-    // ungetc(c,fil);
-    // strcpy(localBuffer,current_token);
-    // if(index == 0)
     
     for (int i = --lecIndex; i >= 0; i--)
-    {
         ungetc(current_token[i],fil);
-    }
+    
  
 }
 
@@ -62,20 +55,16 @@ void syntax_error(token tok, Errors err){
 void clear_current()
 {
     for (int i = 0; i < MAX; i++)
-    {
         current_token[i] = '\0';
-    } 
+    
 }
 
 token next_token() {
     char c;
     char localBuffer[MAX];
     for (int i = 0; i < MAX; i++)
-    {
         localBuffer[i] ='\0';
-    }
-    
-    // fscanf(fil, "%s", current_token); 
+
     int lecIndex = 0;
     while (1)
     {
@@ -87,16 +76,14 @@ token next_token() {
 
     ungetc(c,fil);
     for (int i = --lecIndex; i >= 0; i--)
-    {
         ungetc(localBuffer[i],fil);
-    }
+
     int i;
     for (i = 0; i < MAX; i++)
         if(strcmp(localBuffer, mots_cle[i]) == 0)
             return i;    
     
     printf("\nWeirred error occured\n");
-    
 }
 
 
@@ -121,11 +108,11 @@ void match(token t)
         current_token[lecIndex]=c;
         lecIndex++;
     }
-    
-    if(strcmp(mots_cle[t],current_token) != 0){
-        ungetc(c, fil);
+
+    if(strcmp(mots_cle[t],current_token) != 0)
         syntax_error(t, MATCH_ERROR);
-    } 
+    
+    
 }
 
 void inst(void)
@@ -162,7 +149,6 @@ void inst(void)
 
 void inst_list(void)
 {
-    // <inst_list> ::= <inst> {<inst>}
     inst(); 
     while(1){
         switch(next_token()) {

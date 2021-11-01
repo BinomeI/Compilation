@@ -1,3 +1,7 @@
-write ();
-END
+begin
+    var = 5;
+begin
+    write(6);
+begin
+    var := 6;
 end
