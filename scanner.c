@@ -293,7 +293,7 @@ int main(int argc, char const *argv[])
     printf("\n2- Analyseur Syntaxique\n");
     printf("\nVotre choix: ");
 
-    // scanf("%d", &choice);
+    scanf("%d", &choice);
 
     if(choice != 1 && choice != 2)
         goto etiq; 
