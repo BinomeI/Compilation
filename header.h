@@ -46,7 +46,7 @@ char mots_cle[][MAX] = {
     "ASSIGNOP",
     "PLUSOP",
     "MINUSOP",
-    "SCANEOF" 
+    "SCANEOF"
 };
 
 Errors LexicaleError = NO_ERROR; 

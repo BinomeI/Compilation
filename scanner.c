@@ -185,7 +185,10 @@ token scanner(FILE* pt)
     {
         if (isspace(in_char)) {
             if(in_char == '\n')
-                LineNumbers += 1; 
+            {
+                LineNumbers += 1;
+            }
+                 
             continue;
         }
 
@@ -303,17 +306,22 @@ int main(int argc, char const *argv[])
 
     inF = fopen("InFile.txt","r+");
     outF = fopen("OutFile.txt","w");
-
+     char temp;
     while (1)
     {
-        t = scanner(inF);
 
+        t = scanner(inF);
         fprintf(outF,"%s",mots_cle[t]);
-        if (t == SEMICOLON) fprintf(outF,"\n");
-        else if (t == BEGIN) fprintf(outF,"\n");
-        else if (t == END) fprintf(outF,"\n");
-        else if(t == SCANEOF) break;
-        else fprintf(outF," ");
+        if(t == SCANEOF) break;
+        
+        temp = fgetc(inF);
+        if(temp == '\n')
+            fprintf(outF,"%c",'\n');
+        else 
+        {
+            ungetc(temp,inF);
+            fprintf(outF," ");
+        }
         
     }
     fclose(inF);

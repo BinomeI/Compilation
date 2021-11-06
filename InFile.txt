@@ -1,6 +1,5 @@
-var=1;
 begin
-    var = 5;
-    write(6);
-    var := 6;
+    var == 5;
+    write(6)
+    var := 6
 end
